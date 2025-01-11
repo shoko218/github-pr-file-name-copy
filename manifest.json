@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub PR File Copy",
+  "short_name": "GPFC",
+  "description": "GitHubでファイル名のみをコピーできるようにする拡張機能です。",
+  "version": "1.0",
+  "icons": {
+    "16": "images/icon-16.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
+  },
+  "action": {
+    "default_popup": "index.html"
+  }
+}
