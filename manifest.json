@@ -9,11 +9,16 @@
     "48": "images/icon-48.png",
     "128": "images/icon-128.png"
   },
-  "content_scripts": [
+  "permissions": ["scripting", "tabs", "webNavigation"],
+  "host_permissions": ["https://github.com/*"],
+  "background": {
+    "service_worker": "src/background/index.ts",
+    "persistent": false
+  },
+  "web_accessible_resources": [
     {
-      "js": ["src/content/index.ts"],
-      "matches": ["https://github.com/*/*/pull/*"],
-      "run_at": "document_end"
+      "resources": ["*.svg"],
+      "matches": ["<all_urls>"]
     }
   ]
 }
