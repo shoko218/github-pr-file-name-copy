@@ -13,14 +13,18 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(
           const fileNameCopy = chrome.runtime.getURL("fileNameCopy.svg");
           const copySucceed = chrome.runtime.getURL("copySucceed.svg");
 
-          const ICON_DEFAULT_COLOR_FILTER =
-            "invert(37%) sepia(26%) saturate(252%) hue-rotate(171deg) brightness(94%) contrast(86%)";
-          const ICON_HOVER_COLOR_FILTER =
-            "invert(28%) sepia(99%) saturate(1789%) hue-rotate(202deg) brightness(86%) contrast(98%)";
-          const ICON_SUCCEED_COLOR_FILTER =
-            "invert(33%) sepia(80%) saturate(461%) hue-rotate(84deg) brightness(100%) contrast(90%)";
-          const MESSAGE_BG_COLOR = "#25292F";
-          const MESSAGE_TEXT_COLOR = "#ffffff";
+          const ICON_DEFAULT_COLOR = "var(--fgColor-muted)";
+          const ICON_HOVER_COLOR = "var(--fgColor-accent)";
+          const ICON_SUCCEED_COLOR =
+            "var(--fgColor-success, var(--color-success-fg))";
+          const MESSAGE_BG_COLOR =
+            "var(--bgColor-emphasis,var(--color-neutral-emphasis-plus))";
+          const MESSAGE_TEXT_COLOR =
+            "var(--fgColor-onEmphasis, var(--color-fg-on-emphasis))";
+          const MESSAGE_TEXT_FONT =
+            'var(--text-body-shorthand-small, normal normal 11px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji")';
+
+          const INIT_FILENAME_ELEMENT_CHILD_NODES_LENGTH = 5;
 
           const fileInfoList = Array.from(
             document.getElementsByClassName("file-info")
@@ -29,20 +33,38 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(
             const fileNameElement = Array.from(
               fileInfo.getElementsByClassName("Truncate")
             )[0];
+            if (
+              fileNameElement.childNodes.length >
+              INIT_FILENAME_ELEMENT_CHILD_NODES_LENGTH
+            ) {
+              return;
+            }
+
             const fileName = Array.from(
               fileNameElement.getElementsByTagName("a")
             )[0].textContent;
             if (fileName != null) {
-              const fileCopyIcon = document.createElement("img");
-              fileCopyIcon.src = fileNameCopy;
-              fileCopyIcon.style.filter = ICON_DEFAULT_COLOR_FILTER;
-              const copySucceedIcon = document.createElement("img");
-              copySucceedIcon.src = copySucceed;
+              const fileCopyIcon = document.createElement("div");
+              fileCopyIcon.style.maskPosition = "center";
+              fileCopyIcon.style.maskRepeat = "no-repeat";
+              fileCopyIcon.style.maskSize = "contain";
+              fileCopyIcon.style.maskImage = `url(${fileNameCopy})`;
+              fileCopyIcon.style.width = "16px";
+              fileCopyIcon.style.height = "16px";
+              fileCopyIcon.style.background = ICON_DEFAULT_COLOR;
+              const copySucceedIcon = document.createElement("div");
+              copySucceedIcon.style.maskPosition = "center";
+              copySucceedIcon.style.maskRepeat = "no-repeat";
+              copySucceedIcon.style.maskSize = "contain";
+              copySucceedIcon.style.maskImage = `url(${copySucceed})`;
+              copySucceedIcon.style.width = "16px";
+              copySucceedIcon.style.height = "16px";
               copySucceedIcon.style.display = "none";
-              copySucceedIcon.style.filter = ICON_SUCCEED_COLOR_FILTER;
+              copySucceedIcon.style.background = ICON_SUCCEED_COLOR;
               const copiedMsgP = document.createElement("p");
               copiedMsgP.innerText = "Copied!";
               copiedMsgP.style.color = MESSAGE_TEXT_COLOR;
+              copiedMsgP.style.font = MESSAGE_TEXT_FONT;
               copiedMsgP.style.lineHeight = "18px";
               copiedMsgP.style.marginBottom = "0px";
               const copiedMsgDiv = document.createElement("div");
@@ -67,10 +89,10 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(
               copyButton.appendChild(fileCopyIcon);
               copyButton.appendChild(copySucceedIcon);
               copyButton.onmouseover = () => {
-                fileCopyIcon.style.filter = ICON_HOVER_COLOR_FILTER;
+                fileCopyIcon.style.background = ICON_HOVER_COLOR;
               };
               copyButton.onmouseleave = () => {
-                fileCopyIcon.style.filter = ICON_DEFAULT_COLOR_FILTER;
+                fileCopyIcon.style.background = ICON_DEFAULT_COLOR;
               };
               copyButton.onclick = () => {
                 navigator.clipboard.writeText(fileName.split("/").slice(-1)[0]);
@@ -97,5 +119,5 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(
       });
     }
   },
-  3000)
+  1000)
 );
