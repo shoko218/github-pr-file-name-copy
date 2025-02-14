@@ -6,10 +6,10 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(
     url,
   }: chrome.webNavigation.WebNavigationTransitionCallbackDetails) {
     const prFilesChangedUrl = new RegExp(
-      "^https://github.com/.+/.+/pull/.+/files$"
+      "^https://github.com/.+/.+/pull/.+/files"
     );
     const prCommitsUrl = new RegExp(
-      "^https://github.com/.+/.+/pull/.+/commits/.+$"
+      "^https://github.com/.+/.+/pull/.+/commits/"
     );
     if (
       url != null &&
