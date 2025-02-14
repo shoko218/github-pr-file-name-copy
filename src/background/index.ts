@@ -18,19 +18,7 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(
       chrome.scripting.executeScript({
         target: { tabId },
         func: () => {
-          const fileLayoutArea = (() => {
-            const fileLayoutAreaList =
-              document.getElementsByClassName("Layout-main");
-            if (fileLayoutAreaList.length === 0) {
-              return null;
-            }
-            return fileLayoutAreaList[0];
-          })();
-          if (fileLayoutArea == null) {
-            return;
-          }
-
-          const resizeObserver = new ResizeObserver(() => {
+          const addFileNameCopyButton = () => {
             const fileNameCopy = chrome.runtime.getURL("fileNameCopy.svg");
             const copySucceed = chrome.runtime.getURL("copySucceed.svg");
 
@@ -138,8 +126,24 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(
                 fileNameElement.appendChild(div);
               }
             });
-          });
+          };
 
+          addFileNameCopyButton();
+
+          const fileLayoutArea = (() => {
+            const fileLayoutAreaList =
+              document.getElementsByClassName("Layout-main");
+            if (fileLayoutAreaList.length === 0) {
+              return null;
+            }
+            return fileLayoutAreaList[0];
+          })();
+          if (fileLayoutArea == null) {
+            return;
+          }
+          const resizeObserver = new ResizeObserver(() => {
+            addFileNameCopyButton();
+          });
           resizeObserver.observe(fileLayoutArea);
         },
       });
